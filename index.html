@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Prerana & Someshwar · Sacred Union</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Yatra+One&family=Gotu&family=Tangerine:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    :root {
+      --gold: #FFD700;
+      --light-gold: #f9edb3;
+      --deep-maroon: #4a0b0b;
+      --bright-red: #c62828;
+      --saffron: #ff9933;
+      --haldi: #ffc107;
+      --cream: #fffef7;
+      --card-bg-dark: rgba(58, 8, 8, 0.88);
+      --card-bg-light: rgba(255, 253, 245, 0.92);
+      --border-gold: #e2b13b;
+      --unique-accent: #d4af37;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 30% 40%, #6b1515, #3d0505);
+      font-family: 'Gotu', sans-serif;
+      color: var(--cream);
+      overflow: hidden;
+      height: 100dvh;
+      width: 100vw;
+    }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100dvh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .invitation-stack {
+      display: flex;
+      width: 100vw;
+      height: 100dvh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+      z-index: 10;
+    }
+
+    .invitation-stack::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card {
+      flex-shrink: 0;
+      width: 100vw;
+      height: 100dvh;
+      position: relative;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      padding: calc(45px + env(safe-area-inset-top)) 24px calc(35px + env(safe-area-inset-bottom)) 24px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      box-shadow: inset 0 0 40px rgba(212, 175, 55, 0.15), 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-maroon {
+      background: var(--card-bg-dark);
+      color: var(--cream);
+    }
+
+    .card-cream {
+      background: var(--card-bg-light);
+      color: var(--deep-maroon);
+    }
+
+    /* Elegant Double Border Frame */
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      bottom: 15px;
+      border: 2px solid var(--border-gold);
+      outline: 1px solid var(--border-gold);
+      outline-offset: -6px;
+      border-radius: 16px;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.85;
+      box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.1);
+    }
+    
+    .card-cream::before {
+      border-color: var(--bright-red);
+      outline-color: var(--bright-red);
+      opacity: 0.6;
+    }
+
+    /* Animated Banana Leaves */
+    @keyframes swayLeft {
+      0%, 100% { transform: scaleX(-1) rotate(0deg); }
+      50% { transform: scaleX(-1) rotate(6deg); }
+    }
+
+    @keyframes swayRight {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(-6deg); }
+    }
+
+    .banana-side {
+      position: absolute;
+      height: 60%;
+      top: -5%;
+      z-index: 2;
+      opacity: 0.85;
+      pointer-events: none;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+    }
+
+    .left-side {
+      left: -15px;
+      transform-origin: top right;
+      animation: swayLeft 6s ease-in-out infinite;
+    }
+
+    .right-side {
+      right: -15px;
+      transform-origin: top left;
+      animation: swayRight 6s ease-in-out infinite;
+    }
+
+    .content-wrap {
+      position: relative;
+      z-index: 15;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+    }
+
+   .img-box {
+  flex: 2; /* Increased from 1 to give this box more vertical priority */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  padding: 10px 0; /* Optional: adds a little breathing room */
+}
+
+.img-box img {
+  max-width: 95%; /* Increased from 78% to use almost full width */
+  max-height: 100%; /* Increased height limit */
+  width: auto;     /* Ensures aspect ratio stays correct */
+  height: auto;    /* Ensures aspect ratio stays correct */
+  object-fit: contain;
+  filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.7));
+}
+
+    @keyframes gentleSway {
+      0%, 100% { transform: translateX(0px); }
+      25% { transform: translateX(12px); }
+      75% { transform: translateX(-12px); }
+    }
+
+    .sway-image {
+      animation: gentleSway 6s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    .eng-sharp {
+      font-family: 'Cinzel Decorative', cursive;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .marathi-sharp {
+      font-family: 'Yatra One', cursive;
+      line-height: 1.3;
+      text-shadow: 2px 2px 6px rgba(93, 16, 16, 0.6);
+    }
+
+    .card-maroon .eng-sharp { color: var(--gold); }
+    .card-maroon .marathi-sharp { color: var(--light-gold); }
+    .card-cream .eng-sharp { color: var(--deep-maroon); font-weight: bold; }
+    .card-cream .marathi-sharp { color: var(--bright-red); text-shadow: none; }
+
+    /* Responsive Font Sizing */
+    .shloka {
+      font-size: clamp(1rem, 4vw, 1.3rem);
+      line-height: 1.6;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .card-maroon .shloka { color: var(--light-gold); }
+    .card-cream .shloka { color: var(--saffron); }
+
+    .names-title {
+      font-size: clamp(2.4rem, 8vw, 3.5rem);
+      margin: 6px 0;
+      line-height: 1.2;
+    }
+
+    .divider-gold {
+      width: 75%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 12px auto;
+    }
+
+    .info-block {
+      background: rgba(255, 253, 245, 0.12);
+      border-radius: 16px;
+      padding: 16px 20px;
+      width: 100%;
+      border: 1px solid rgba(255, 215, 0, 0.6);
+      margin: 6px 0;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(6px);
+      position: relative;
+      z-index: 5;
+    }
+
+    .card-cream .info-block {
+      background: rgba(255, 153, 51, 0.1);
+      border-color: rgba(198, 40, 40, 0.5);
+    }
+
+    .big-marathi { font-size: clamp(1.8rem, 6vw, 2.5rem); }
+    .med-marathi { font-size: clamp(1.4rem, 5vw, 1.8rem); }
+    .eng-sub { font-size: clamp(1rem, 3.5vw, 1.2rem); letter-spacing: 1.5px; }
+
+    .trans-equal {
+      font-size: clamp(0.9rem, 3vw, 1rem);
+      opacity: 0.95;
+      display: block;
+      margin-top: 3px;
+    }
+    
+    .desc-text {
+        font-size: clamp(0.95rem, 3.2vw, 1.1rem);
+        line-height: 1.5;
+    }
+
+    .anim-element {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .in-view .anim-element {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .d-1 { transition-delay: 0.15s; }
+    .d-2 { transition-delay: 0.35s; }
+    .d-3 { transition-delay: 0.55s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .floating { animation: float 4.5s ease-in-out infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .swipe-hint {
+      font-size: clamp(0.8rem, 2.5vw, 1rem);
+      animation: pulse 2s infinite;
+      margin-top: 12px;
+      color: var(--gold);
+    }
+
+    .couple-layer-box {
+      position: relative;
+      width: 100%;
+      height: 40vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .back-layer {
+      position: absolute;
+      width: 120%;
+      max-height: 100%;
+      z-index: 1;
+      opacity: 0.75;
+      animation: float 6s ease-in-out infinite reverse;
+    }
+
+    .front-layer {
+      position: relative;
+      max-height: 90%;
+      max-width: 84%;
+      z-index: 2;
+      filter: drop-shadow(0 12px 24px rgba(179, 0, 0, 0.5));
+    }
+
+    .ritual-img { max-height: clamp(180px, 30vh, 230px) !important; }
+    .venue-img { max-height: clamp(180px, 30vh, 230px) !important; }
+    .memory-img { border-radius: 12px; border: 3px solid var(--gold); max-height: clamp(200px, 35vh, 280px) !important; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+
+    .corner-accent {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border: 3px solid var(--gold);
+      opacity: 0.6;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .accent-tl {
+      top: 22px; left: 22px;
+      border-right: none; border-bottom: none;
+    }
+
+    .accent-br {
+      bottom: 22px; right: 22px;
+      border-left: none; border-top: none;
+    }
+
+    /* Control height for Tutari (5th section) and HTH/Rituals (4th section) */
+section:nth-of-type(4) .img-box img, 
+section:nth-of-type(5) .img-box img {
+    max-height: 450px; /* Adjust this number (e.g., 300px, 500px) to change height */
+    max-width: 100%;   /* Ensures it doesn't bleed off the screen width */
+    height: auto;      /* Maintains aspect ratio */
+    transform: scale(1.2); /* Optional: extra zoom if it still looks small */
+}
+  </style>
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <div class="invitation-stack">
+    
+    <section class="card card-maroon">
+      <div class="corner-accent accent-tl"></div>
+      <div class="corner-accent accent-br"></div>
+      <img src="banana.png" class="banana-side left-side" alt="">
+      <img src="banana.png" class="banana-side right-side" alt="">
+      <div class="content-wrap">
+        <div class="shloka anim-element d-1">वक्रतुंड महाकाय सूर्यकोटि समप्रभ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥</div>
+        <div class="img-box anim-element d-2">
+          <div class="sway-image">
+            <img src="ganesh.png" alt="Ganesha" class="floating">
+          </div>
+        </div>
+        <div class="anim-element d-3">
+          <h1 class="marathi-sharp names-title">कोंडे 卐 तट्टू</h1>
+          <div class="divider-gold"></div>
+          <p class="eng-sharp eng-sub">Auspicious Union</p>
+        </div>
+        <p class="eng-sharp swipe-hint">SWIPE <i class="fas fa-chevron-right"></i></p>
+      </div>
+    </section>
+
+    <section class="card card-cream">
+    <div class="corner-accent accent-tl" style="border-color: var(--bright-red);"></div>
+    <div class="corner-accent accent-br" style="border-color: var(--bright-red);"></div>
+    <img src="banana.png" class="banana-side left-side" alt="">
+    <img src="banana.png" class="banana-side right-side" alt="">
+    
+    <div class="content-wrap" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+        
+        <div class="couple-layer-box anim-element d-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; flex: 1; position: relative;">
+            
+            
+            <img src="haldi.png" alt="Haldi" style="max-height: 150px; width: auto; object-fit: contain; z-index: 2; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));">
+            
+            <img src="couple.png" alt="Couple" style="max-height: 200px; width: auto; object-fit: contain; z-index: 1; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));">
+            
+        </div>
+
+        <div class="anim-element d-3" style="text-align: center; padding-bottom: 20px;">
+            <h1 class="marathi-sharp names-title" style="color: var(--deep-maroon); margin-bottom: 10px;">
+                चि. सौ. कां. प्रेरणा <br>
+                <span style="font-size: clamp(1.4rem, 5vw, 1.9rem); color: var(--saffron); font-family: 'Tangerine', cursive;">आणि</span> <br>
+                चि. सोमेश्वर
+            </h1>
+            <div class="divider-gold" style="height: 2px; width: 80%; margin: 10px auto; background: linear-gradient(90deg, transparent, var(--bright-red), transparent);"></div>
+            <p class="eng-sharp eng-sub" style="color: var(--deep-maroon); font-weight: bold; letter-spacing: 1px;">Prerana & Someshwar</p>
+            <p class="trans-equal" style="color: var(--bright-red); font-style: italic;">(प्रेरणा आणि सोमेश्वर)</p>
+        </div>
+        
+    </div>
+</section>
+
+    <section class="card card-maroon">
+      <div class="corner-accent accent-tl"></div>
+      <div class="corner-accent accent-br"></div>
+      <img src="banana.png" class="banana-side left-side" alt="">
+      <img src="banana.png" class="banana-side right-side" alt="">
+      <div class="content-wrap" style="justify-content: center; gap: 12px;">
+        <div class="info-block anim-element d-1">
+          <h3 class="eng-sharp eng-sub" style="color: var(--gold);">The Bride</h3>
+          <h2 class="marathi-sharp big-marathi">प्रेरणा</h2>
+          <p class="desc-text">
+            सौ. जिजाबाई व श्री. ज्ञानदेव पुनाजी कोंडे यांची नातू<br>
+            <span class="trans-equal" style="color: var(--gold);">(Granddaughter of Sav. Jijabai & Shri. Gyandev Punaji Konde)</span><br>
+            सौ. गीता व श्री. दिनकर ज्ञानदेव कोंडे यांची सुकन्या<br>
+            <span class="trans-equal" style="color: var(--gold);">(Daughter of Sav. Gita & Shri. Dinkar Gyandev Konde)</span><br>
+            <span style="color: var(--haldi); font-size: 0.9em; display:block; margin-top: 5px;">धामणखेल, ता. जुन्नर, जि. पुणे</span>
+          </p>
+        </div>
+        <div class="eng-sharp anim-element d-2" style="font-size: clamp(1.2rem, 4vw, 1.6rem); color: var(--gold);">Weds</div>
+        <div class="info-block anim-element d-3">
+          <h3 class="eng-sharp eng-sub" style="color: var(--gold);">The Groom</h3>
+          <h2 class="marathi-sharp big-marathi">सोमेश्वर</h2>
+          <p class="desc-text">
+            सौ. जयश्री व श्री. प्रकाश शंकर तट्टू यांचे सुपुत्र<br>
+            <span class="trans-equal" style="color: var(--gold);">(Son of Sav. Jayashree & Shri. Prakash Shankar Tattu)</span><br>
+            <span style="color: var(--haldi); font-size: 0.9em; display:block; margin-top: 5px;">उंब्रज नं.२, ता. जुन्नर, जि. पुणे</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card card-cream">
+      <div class="corner-accent accent-tl" style="border-color: var(--bright-red);"></div>
+      <div class="corner-accent accent-br" style="border-color: var(--bright-red);"></div>
+      <img src="banana.png" class="banana-side left-side" alt="">
+      <img src="banana.png" class="banana-side right-side" alt="">
+      <div class="content-wrap">
+        <h2 class="marathi-sharp names-title anim-element d-1">शुभविवाह सोहळा</h2>
+        <div class="img-box anim-element d-2" style="flex: 0.5;">
+          <img src="hth.png" alt="Rituals" class="ritual-img">
+        </div>
+        <div class="info-block anim-element d-2">
+          <p class="marathi-sharp med-marathi" style="color: var(--saffron);">साखरपुडा, टिळा व हळदी</p>
+          <p class="eng-sharp eng-sub" style="color: var(--deep-maroon);">Engagement, Tila & Haldi</p>
+          <p class="desc-text" style="font-weight: bold; color: var(--deep-maroon); margin-top: 8px;">
+            शुक्रवार, दि. ०८/०५/२०२६<br>सकाळी १० ते १ (स्थळी)<br>
+            <span class="trans-equal" style="color: var(--deep-maroon); font-weight: normal;">Friday, 08/05/2026 | 10 AM–1 PM</span>
+          </p>
+        </div>
+        <div class="info-block anim-element d-3" style="border-color: var(--bright-red); border-width: 2px;">
+          <p class="marathi-sharp med-marathi" style="color: var(--bright-red);">शुभविवाह मुहूर्त</p>
+          <p class="eng-sharp eng-sub" style="color: var(--bright-red);">Auspicious Muhurta</p>
+          <p class="desc-text" style="font-weight: bold; color: var(--deep-maroon); margin-top: 8px;">
+            शुक्रवार ०८/०५/२०२६<br>सायं. ०४.०९ वा.<br>
+            <span class="trans-equal" style="color: var(--deep-maroon); font-weight: normal;">Friday, 08/05/2026 at 4:09 PM</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card card-maroon">
+      <div class="corner-accent accent-tl"></div>
+      <div class="corner-accent accent-br"></div>
+      <img src="banana.png" class="banana-side left-side" alt="">
+      <img src="banana.png" class="banana-side right-side" alt="">
+      <div class="content-wrap" style="justify-content: center;">
+        <h2 class="eng-sharp names-title anim-element d-1" style="color: var(--gold);">Sacred Memories</h2>
+        <p class="marathi-sharp med-marathi anim-element d-1" style="color: var(--light-gold);">काही गोड आठवणी</p>
+        
+        <div class="img-box anim-element d-2" style="margin: 30px 0;">
+          <img src="mem.png" alt="Pre-Wedding Memory" class="memory-img floating">
+        </div>
+        
+        <div class="info-block anim-element d-3">
+          <div class="divider-gold" style="margin-top:0;"></div>
+          <p class="desc-text" style="color: var(--cream); font-style: italic;">
+            "A glimpse into our beautiful journey together before we officially tie the knot."
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card card-maroon">
+      <div class="corner-accent accent-tl"></div>
+      <div class="corner-accent accent-br"></div>
+      <img src="banana.png" class="banana-side left-side" alt="">
+      <img src="banana.png" class="banana-side right-side" alt="">
+      <div class="content-wrap">
+        <h2 class="eng-sharp names-title anim-element d-1" style="color: var(--gold);">Wedding Venue</h2>
+        <div class="img-box anim-element d-2">
+          <img src="tutari.png" alt="Venue" class="venue-img sway-image">
+        </div>
+        <div class="info-block anim-element d-3">
+          <h3 class="marathi-sharp big-marathi" style="color: var(--light-gold);">साई समता मंगल कार्यालय</h3>
+          <p class="eng-sharp eng-sub" style="color: var(--gold);">Sai Samata Mangal Karyalaya</p>
+          <div class="divider-gold"></div>
+          <p class="desc-text">
+            जुन्नर-घोडेगाव रोड, वस्ती, खानापूर<br>ता. जुन्नर, जि. पुणे<br>
+            <span class="trans-equal" style="color: var(--light-gold);">Junnar-Ghodegaon Road, Vasti, Khanapur</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card card-cream">
+      <div class="corner-accent accent-tl" style="border-color: var(--bright-red);"></div>
+      <div class="corner-accent accent-br" style="border-color: var(--bright-red);"></div>
+      <img src="banana.png" class="banana-side left-side" alt="">
+      <img src="banana.png" class="banana-side right-side" alt="">
+      <div class="content-wrap" style="justify-content: center;">
+        <h2 class="eng-sharp anim-element d-1" style="font-size: clamp(1.1rem, 3.5vw, 1.4rem); margin-bottom: 20px;">With Best Compliments From</h2>
+        <div class="info-block anim-element d-2" style="background: rgba(255, 153, 51, 0.12);">
+          <p class="marathi-sharp big-marathi" style="color: var(--bright-red);">निमंत्रक</p>
+          <p class="marathi-sharp med-marathi" style="color: var(--deep-maroon); margin: 10px 0;">
+            समस्त कोंडे पा. परिवार व आप्तेष्ट<br>समस्त ग्रामस्थ धामणखेल
+          </p>
+          <p class="eng-sharp eng-sub" style="color: var(--bright-red);">Inviters</p>
+          <p class="desc-text" style="color: var(--deep-maroon); margin-top: 5px;">Konde Patil Family & Residents of Dhamankhel</p>
+        </div>
+        <div class="anim-element d-3" style="margin-top: 50px;">
+          <div class="marathi-sharp" style="font-size: clamp(1.6rem, 5.5vw, 2.2rem); color: var(--saffron);">॥ सदा सर्वदा योग तुझा घडावा ॥</div>
+          <div class="eng-sharp" style="font-size: clamp(0.8rem, 3vw, 1rem); color: var(--saffron); margin-top: 8px;">May we always stay connected</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // --- Three.js Implementation ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.8, 2000);
+    const renderer = new THREE.WebGLRenderer({
+      canvas: document.getElementById('bg-canvas'),
+      alpha: true,
+      antialias: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    camera.position.set(0, 20, 500);
+    camera.lookAt(0, 0, 0);
+
+    // --- Spiral magical rings ---
+    const ringGroup = new THREE.Group();
+    const rings = [];
+
+    function createSpiralRing(radius, tubeRadius, color, opacity, speedY, speedX) {
+      const geometry = new THREE.TorusGeometry(radius, tubeRadius, 64, 160);
+      const material = new THREE.MeshStandardMaterial({
+        color: color,
+        emissive: color,
+        emissiveIntensity: 0.7,
+        transparent: true,
+        opacity: opacity,
+        roughness: 0.22,
+        metalness: 0.2,
+      });
+      const ring = new THREE.Mesh(geometry, material);
+      ring.userData = {
+        rotSpeedY: speedY,
+        rotSpeedX: speedX,
+        phase: Math.random() * Math.PI * 2,
+      };
+      ring.rotation.x = Math.random() * Math.PI;
+      ring.rotation.y = Math.random() * Math.PI;
+      return ring;
+    }
+
+    const ringColors = [0xFFD700, 0xFFA500, 0xFF9933, 0xFFC125, 0xFFB347, 0xFF8C00];
+    for (let i = 0; i < 7; i++) {
+      const radius = 115 + i * 34;
+      const tube = 2.2 + i * 0.6;
+      const color = ringColors[i % ringColors.length];
+      const ring = createSpiralRing(radius, tube, color, 0.42 - i * 0.04, 0.002 + Math.random() * 0.007, 0.001 + Math.random() * 0.004);
+      ringGroup.add(ring);
+      rings.push(ring);
+    }
+    scene.add(ringGroup);
+
+    // --- Continuous Flower Shower (Top to Bottom) ---
+    const flowerGeo = new THREE.BufferGeometry();
+    const flowerCount = 900; // Increased density for better full-screen effect
+    const flowerPositions = new Float32Array(flowerCount * 3);
+    const flowerColors = new Float32Array(flowerCount * 3);
+    const flowerSpeeds = new Float32Array(flowerCount); 
+
+    const palette = [
+      new THREE.Color('#FFD700'), new THREE.Color('#FF9933'),
+      new THREE.Color('#FFB6C1'), new THREE.Color('#FFA500'),
+      new THREE.Color('#FFC0CB'), new THREE.Color('#FF8C00'),
+      new THREE.Color('#FFE4B5'), new THREE.Color('#FF6347')
+    ];
+
+    // Distribute flowers continuously across the entire vertical space
+    for (let i = 0; i < flowerCount; i++) {
+      flowerPositions[i * 3] = (Math.random() - 0.5) * 800; // Wider X spread
+      flowerPositions[i * 3 + 1] = (Math.random() - 0.5) * 1000 + 200; // Y Spread covering top to bottom
+      flowerPositions[i * 3 + 2] = (Math.random() - 0.5) * 600; // Z depth
+
+      flowerSpeeds[i] = 1.0 + Math.random() * 2.0; // Individual fall speeds
+
+      const col = palette[Math.floor(Math.random() * palette.length)];
+      flowerColors[i * 3] = col.r;
+      flowerColors[i * 3 + 1] = col.g;
+      flowerColors[i * 3 + 2] = col.b;
+    }
+    flowerGeo.setAttribute('position', new THREE.BufferAttribute(flowerPositions, 3));
+    flowerGeo.setAttribute('color', new THREE.BufferAttribute(flowerColors, 3));
+
+    const flowerMat = new THREE.PointsMaterial({
+      size: 5.5, // Slightly larger petals
+      vertexColors: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      transparent: true,
+      opacity: 0.9,
+      map: (() => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 32; canvas.height = 32;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.ellipse(16, 12, 6, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fff8dc';
+        ctx.beginPath();
+        ctx.ellipse(9, 7, 5, 8, 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(23, 7, 5, 8, -0.5, 0, Math.PI * 2);
+        ctx.fill();
+        return new THREE.CanvasTexture(canvas);
+      })(),
+    });
+    const flowers = new THREE.Points(flowerGeo, flowerMat);
+    scene.add(flowers);
+
+    // Additional tiny ambient sparkles
+    const sparkleGeo = new THREE.BufferGeometry();
+    const sparkleCount = 500;
+    const sparklePos = new Float32Array(sparkleCount * 3);
+    for (let i = 0; i < sparkleCount * 3; i += 3) {
+      sparklePos[i] = (Math.random() - 0.5) * 800;
+      sparklePos[i + 1] = (Math.random() - 0.5) * 800;
+      sparklePos[i + 2] = (Math.random() - 0.5) * 600;
+    }
+    sparkleGeo.setAttribute('position', new THREE.BufferAttribute(sparklePos, 3));
+    const sparkleMat = new THREE.PointsMaterial({
+      color: 0xFFD700,
+      size: 2.2,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      transparent: true,
+      opacity: 0.7,
+    });
+    const sparkles = new THREE.Points(sparkleGeo, sparkleMat);
+    scene.add(sparkles);
+
+    // Lights
+    scene.add(new THREE.AmbientLight(0x4a2020));
+    const light1 = new THREE.PointLight(0xFFAA00, 1.2, 800);
+    light1.position.set(70, 150, 250);
+    scene.add(light1);
+    const light2 = new THREE.PointLight(0xFF5500, 0.8, 600);
+    light2.position.set(-80, -50, 200);
+    scene.add(light2);
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Rings
+      rings.forEach((ring, idx) => {
+        ring.rotation.y += ring.userData.rotSpeedY;
+        ring.rotation.x += ring.userData.rotSpeedX;
+        const s = 1 + Math.sin(Date.now() * 0.003 + idx) * 0.03;
+        ring.scale.set(s, s, s);
+      });
+
+      // Continuous Endless Flower Shower
+      const pos = flowers.geometry.attributes.position.array;
+      for (let i = 0; i < flowerCount; i++) {
+        pos[i * 3 + 1] -= flowerSpeeds[i]; // Fall down continuously
+        pos[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.5; // Natural drift side-to-side
+        
+        // If it falls completely past the bottom edge of the screen
+        if (pos[i * 3 + 1] < -450) { 
+          // Respawn far above the top edge
+          pos[i * 3 + 1] = 500 + Math.random() * 150; 
+          pos[i * 3] = (Math.random() - 0.5) * 800; 
+          pos[i * 3 + 2] = (Math.random() - 0.5) * 600;
+        }
+      }
+      flowers.geometry.attributes.position.needsUpdate = true;
+
+      // Sparkles
+      sparkles.rotation.y += 0.0005;
+      sparkles.rotation.x += 0.0003;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Window Resize Handling
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Intersection Observer for CSS Animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('in-view');
+        else entry.target.classList.remove('in-view');
+      });
+    }, { threshold: 0.3 }); // Lowered threshold slightly to trigger earlier
+    
+    document.querySelectorAll('.card').forEach(card => observer.observe(card));
+  </script>
+
+  <div class="flower-shower-container" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; overflow:hidden;"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+
+<style>
+    @keyframes flowerFall {
+        0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+        10% { opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+    .falling-flower {
+        position: absolute;
+        top: -50px;
+        animation: flowerFall linear infinite;
+    }
+</style>
+
+<script>
+    (function() {
+        const container = document.querySelector('.flower-shower-container');
+        const icons = ['fa-leaf', 'fa-fan', 'fa-seedling', 'fa-certificate'];
+        const colors = ['#f4e1a1', '#ffffff', '#ffd700', '#ff69b4'];
+
+        for (let i = 0; i < 50; i++) {
+            const f = document.createElement('i');
+            f.className = `fas ${icons[Math.floor(Math.random() * icons.length)]} falling-flower`;
+            f.style.left = Math.random() * 100 + '%';
+            f.style.color = colors[Math.floor(Math.random() * colors.length)];
+            f.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            f.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            f.style.animationDelay = Math.random() * 5 + 's';
+            container.appendChild(f);
+        }
+    })();
+</script>
+</body>
+</html>
