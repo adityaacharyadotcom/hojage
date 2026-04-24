@@ -76,7 +76,7 @@
       position: relative;
       scroll-snap-align: start;
       scroll-snap-stop: always;
-      padding: calc(45px + env(safe-area-inset-top)) 24px calc(35px + env(safe-area-inset-bottom)) 24px;
+      padding: calc(30px + env(safe-area-inset-top)) 20px calc(25px + env(safe-area-inset-bottom)) 20px;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -95,7 +95,6 @@
       color: var(--deep-maroon);
     }
 
-    /* Elegant Double Border Frame */
     .card::before {
       content: "";
       position: absolute;
@@ -119,7 +118,6 @@
       opacity: 0.6;
     }
 
-    /* Animated Banana Leaves */
     @keyframes swayLeft {
       0%, 100% { transform: scaleX(-1) rotate(0deg); }
       50% { transform: scaleX(-1) rotate(6deg); }
@@ -160,28 +158,29 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
+      justify-content: space-evenly;
       text-align: center;
+      padding: 10px 0;
     }
 
-   .img-box {
-  flex: 2; /* Increased from 1 to give this box more vertical priority */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 0;
-  padding: 10px 0; /* Optional: adds a little breathing room */
-}
+    .img-box {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 0;
+      padding: 5px 0;
+    }
 
-.img-box img {
-  max-width: 95%; /* Increased from 78% to use almost full width */
-  max-height: 100%; /* Increased height limit */
-  width: auto;     /* Ensures aspect ratio stays correct */
-  height: auto;    /* Ensures aspect ratio stays correct */
-  object-fit: contain;
-  filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.7));
-}
+    .img-box img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.7));
+    }
 
     @keyframes gentleSway {
       0%, 100% { transform: translateX(0px); }
@@ -211,10 +210,9 @@
     .card-cream .eng-sharp { color: var(--deep-maroon); font-weight: bold; }
     .card-cream .marathi-sharp { color: var(--bright-red); text-shadow: none; }
 
-    /* Responsive Font Sizing */
     .shloka {
-      font-size: clamp(1rem, 4vw, 1.3rem);
-      line-height: 1.6;
+      font-size: clamp(0.9rem, 3.5vw, 1.3rem);
+      line-height: 1.5;
       margin-bottom: 6px;
       font-weight: 600;
     }
@@ -223,7 +221,7 @@
     .card-cream .shloka { color: var(--saffron); }
 
     .names-title {
-      font-size: clamp(2.4rem, 8vw, 3.5rem);
+      font-size: clamp(2rem, 7vw, 3.5rem);
       margin: 6px 0;
       line-height: 1.2;
     }
@@ -232,20 +230,21 @@
       width: 75%;
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
-      margin: 12px auto;
+      margin: 10px auto;
     }
 
     .info-block {
       background: rgba(255, 253, 245, 0.12);
       border-radius: 16px;
-      padding: 16px 20px;
+      padding: 12px 15px;
       width: 100%;
       border: 1px solid rgba(255, 215, 0, 0.6);
-      margin: 6px 0;
+      margin: 5px 0;
       box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
       backdrop-filter: blur(6px);
       position: relative;
       z-index: 5;
+      flex: 0 1 auto;
     }
 
     .card-cream .info-block {
@@ -253,20 +252,20 @@
       border-color: rgba(198, 40, 40, 0.5);
     }
 
-    .big-marathi { font-size: clamp(1.8rem, 6vw, 2.5rem); }
-    .med-marathi { font-size: clamp(1.4rem, 5vw, 1.8rem); }
-    .eng-sub { font-size: clamp(1rem, 3.5vw, 1.2rem); letter-spacing: 1.5px; }
+    .big-marathi { font-size: clamp(1.6rem, 5vw, 2.5rem); }
+    .med-marathi { font-size: clamp(1.2rem, 4.5vw, 1.8rem); }
+    .eng-sub { font-size: clamp(0.9rem, 3vw, 1.2rem); letter-spacing: 1.5px; }
 
     .trans-equal {
-      font-size: clamp(0.9rem, 3vw, 1rem);
+      font-size: clamp(0.85rem, 2.8vw, 1rem);
       opacity: 0.95;
       display: block;
       margin-top: 3px;
     }
     
     .desc-text {
-        font-size: clamp(0.95rem, 3.2vw, 1.1rem);
-        line-height: 1.5;
+        font-size: clamp(0.85rem, 3vw, 1.1rem);
+        line-height: 1.4;
     }
 
     .anim-element {
@@ -299,40 +298,36 @@
     .swipe-hint {
       font-size: clamp(0.8rem, 2.5vw, 1rem);
       animation: pulse 2s infinite;
-      margin-top: 12px;
+      margin-top: 8px;
       color: var(--gold);
     }
 
     .couple-layer-box {
-      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
       width: 100%;
-      height: 40vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 15px;
+      position: relative;
       z-index: 5;
     }
 
-    .back-layer {
-      position: absolute;
-      width: 120%;
-      max-height: 100%;
-      z-index: 1;
-      opacity: 0.75;
-      animation: float 6s ease-in-out infinite reverse;
+    .couple-layer-box img {
+      max-width: 100%;
+      max-height: 45%;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
     }
 
-    .front-layer {
-      position: relative;
-      max-height: 90%;
-      max-width: 84%;
-      z-index: 2;
-      filter: drop-shadow(0 12px 24px rgba(179, 0, 0, 0.5));
+    .memory-img {
+      border-radius: 12px;
+      border: 3px solid var(--gold);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
     }
-
-    .ritual-img { max-height: clamp(180px, 30vh, 230px) !important; }
-    .venue-img { max-height: clamp(180px, 30vh, 230px) !important; }
-    .memory-img { border-radius: 12px; border: 3px solid var(--gold); max-height: clamp(200px, 35vh, 280px) !important; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
     .corner-accent {
       position: absolute;
@@ -353,15 +348,6 @@
       bottom: 22px; right: 22px;
       border-left: none; border-top: none;
     }
-
-    /* Control height for Tutari (5th section) and HTH/Rituals (4th section) */
-section:nth-of-type(4) .img-box img, 
-section:nth-of-type(5) .img-box img {
-    max-height: 450px; /* Adjust this number (e.g., 300px, 500px) to change height */
-    max-width: 100%;   /* Ensures it doesn't bleed off the screen width */
-    height: auto;      /* Maintains aspect ratio */
-    transform: scale(1.2); /* Optional: extra zoom if it still looks small */
-}
   </style>
 </head>
 <body>
@@ -376,7 +362,7 @@ section:nth-of-type(5) .img-box img {
       <div class="content-wrap">
         <div class="shloka anim-element d-1">वक्रतुंड महाकाय सूर्यकोटि समप्रभ।<br>निर्विघ्नं कुरु मे देव सर्वकार्येषु सर्वदा॥</div>
         <div class="img-box anim-element d-2">
-          <div class="sway-image">
+          <div class="sway-image" style="height: 100%; display: flex; align-items: center; justify-content: center;">
             <img src="ganesh.png" alt="Ganesha" class="floating">
           </div>
         </div>
@@ -395,24 +381,20 @@ section:nth-of-type(5) .img-box img {
     <img src="banana.png" class="banana-side left-side" alt="">
     <img src="banana.png" class="banana-side right-side" alt="">
     
-    <div class="content-wrap" style="display: flex; flex-direction: column; justify-content: space-between; height: 100%;">
+    <div class="content-wrap">
         
-        <div class="couple-layer-box anim-element d-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; flex: 1; position: relative;">
-            
-            
-            <img src="haldi.png" alt="Haldi" style="max-height: 150px; width: auto; object-fit: contain; z-index: 2; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));">
-            
-            <img src="couple.png" alt="Couple" style="max-height: 200px; width: auto; object-fit: contain; z-index: 1; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));">
-            
+        <div class="couple-layer-box anim-element d-2">
+            <img src="haldi.png" alt="Haldi" style="z-index: 2;">
+            <img src="couple.png" alt="Couple" style="z-index: 1;">
         </div>
 
-        <div class="anim-element d-3" style="text-align: center; padding-bottom: 20px;">
-            <h1 class="marathi-sharp names-title" style="color: var(--deep-maroon); margin-bottom: 10px;">
+        <div class="anim-element d-3" style="text-align: center;">
+            <h1 class="marathi-sharp names-title" style="color: var(--deep-maroon); margin-bottom: 5px;">
                 चि. सौ. कां. प्रेरणा <br>
-                <span style="font-size: clamp(1.4rem, 5vw, 1.9rem); color: var(--saffron); font-family: 'Tangerine', cursive;">आणि</span> <br>
+                <span style="font-size: clamp(1.2rem, 4vw, 1.9rem); color: var(--saffron); font-family: 'Tangerine', cursive;">आणि</span> <br>
                 चि. सोमेश्वर
             </h1>
-            <div class="divider-gold" style="height: 2px; width: 80%; margin: 10px auto; background: linear-gradient(90deg, transparent, var(--bright-red), transparent);"></div>
+            <div class="divider-gold" style="height: 2px; width: 80%; margin: 8px auto; background: linear-gradient(90deg, transparent, var(--bright-red), transparent);"></div>
             <p class="eng-sharp eng-sub" style="color: var(--deep-maroon); font-weight: bold; letter-spacing: 1px;">Prerana & Someshwar</p>
             <p class="trans-equal" style="color: var(--bright-red); font-style: italic;">(प्रेरणा आणि सोमेश्वर)</p>
         </div>
@@ -425,7 +407,7 @@ section:nth-of-type(5) .img-box img {
       <div class="corner-accent accent-br"></div>
       <img src="banana.png" class="banana-side left-side" alt="">
       <img src="banana.png" class="banana-side right-side" alt="">
-      <div class="content-wrap" style="justify-content: center; gap: 12px;">
+      <div class="content-wrap" style="justify-content: center; gap: 8px;">
         <div class="info-block anim-element d-1">
           <h3 class="eng-sharp eng-sub" style="color: var(--gold);">The Bride</h3>
           <h2 class="marathi-sharp big-marathi">प्रेरणा</h2>
@@ -434,17 +416,17 @@ section:nth-of-type(5) .img-box img {
             <span class="trans-equal" style="color: var(--gold);">(Granddaughter of Sav. Jijabai & Shri. Gyandev Punaji Konde)</span><br>
             सौ. गीता व श्री. दिनकर ज्ञानदेव कोंडे यांची सुकन्या<br>
             <span class="trans-equal" style="color: var(--gold);">(Daughter of Sav. Gita & Shri. Dinkar Gyandev Konde)</span><br>
-            <span style="color: var(--haldi); font-size: 0.9em; display:block; margin-top: 5px;">धामणखेल, ता. जुन्नर, जि. पुणे</span>
+            <span style="color: var(--haldi); font-size: 0.9em; display:block; margin-top: 3px;">धामणखेल, ता. जुन्नर, जि. पुणे</span>
           </p>
         </div>
-        <div class="eng-sharp anim-element d-2" style="font-size: clamp(1.2rem, 4vw, 1.6rem); color: var(--gold);">Weds</div>
+        <div class="eng-sharp anim-element d-2" style="font-size: clamp(1rem, 3.5vw, 1.4rem); color: var(--gold);">Weds</div>
         <div class="info-block anim-element d-3">
           <h3 class="eng-sharp eng-sub" style="color: var(--gold);">The Groom</h3>
           <h2 class="marathi-sharp big-marathi">सोमेश्वर</h2>
           <p class="desc-text">
             सौ. जयश्री व श्री. प्रकाश शंकर तट्टू यांचे सुपुत्र<br>
             <span class="trans-equal" style="color: var(--gold);">(Son of Sav. Jayashree & Shri. Prakash Shankar Tattu)</span><br>
-            <span style="color: var(--haldi); font-size: 0.9em; display:block; margin-top: 5px;">उंब्रज नं.२, ता. जुन्नर, जि. पुणे</span>
+            <span style="color: var(--haldi); font-size: 0.9em; display:block; margin-top: 3px;">उंब्रज नं.२, ता. जुन्नर, जि. पुणे</span>
           </p>
         </div>
       </div>
@@ -456,14 +438,14 @@ section:nth-of-type(5) .img-box img {
       <img src="banana.png" class="banana-side left-side" alt="">
       <img src="banana.png" class="banana-side right-side" alt="">
       <div class="content-wrap">
-        <h2 class="marathi-sharp names-title anim-element d-1">शुभविवाह सोहळा</h2>
-        <div class="img-box anim-element d-2" style="flex: 0.5;">
-          <img src="hth.png" alt="Rituals" class="ritual-img">
+        <h2 class="marathi-sharp names-title anim-element d-1" style="margin-bottom:0;">शुभविवाह सोहळा</h2>
+        <div class="img-box anim-element d-2">
+          <img src="hth.png" alt="Rituals">
         </div>
         <div class="info-block anim-element d-2">
           <p class="marathi-sharp med-marathi" style="color: var(--saffron);">साखरपुडा, टिळा व हळदी</p>
           <p class="eng-sharp eng-sub" style="color: var(--deep-maroon);">Engagement, Tila & Haldi</p>
-          <p class="desc-text" style="font-weight: bold; color: var(--deep-maroon); margin-top: 8px;">
+          <p class="desc-text" style="font-weight: bold; color: var(--deep-maroon); margin-top: 4px;">
             शुक्रवार, दि. ०८/०५/२०२६<br>सकाळी १० ते १ (स्थळी)<br>
             <span class="trans-equal" style="color: var(--deep-maroon); font-weight: normal;">Friday, 08/05/2026 | 10 AM–1 PM</span>
           </p>
@@ -471,7 +453,7 @@ section:nth-of-type(5) .img-box img {
         <div class="info-block anim-element d-3" style="border-color: var(--bright-red); border-width: 2px;">
           <p class="marathi-sharp med-marathi" style="color: var(--bright-red);">शुभविवाह मुहूर्त</p>
           <p class="eng-sharp eng-sub" style="color: var(--bright-red);">Auspicious Muhurta</p>
-          <p class="desc-text" style="font-weight: bold; color: var(--deep-maroon); margin-top: 8px;">
+          <p class="desc-text" style="font-weight: bold; color: var(--deep-maroon); margin-top: 4px;">
             शुक्रवार ०८/०५/२०२६<br>सायं. ०४.०९ वा.<br>
             <span class="trans-equal" style="color: var(--deep-maroon); font-weight: normal;">Friday, 08/05/2026 at 4:09 PM</span>
           </p>
@@ -488,7 +470,7 @@ section:nth-of-type(5) .img-box img {
         <h2 class="eng-sharp names-title anim-element d-1" style="color: var(--gold);">Sacred Memories</h2>
         <p class="marathi-sharp med-marathi anim-element d-1" style="color: var(--light-gold);">काही गोड आठवणी</p>
         
-        <div class="img-box anim-element d-2" style="margin: 30px 0;">
+        <div class="img-box anim-element d-2" style="margin: 15px 0;">
           <img src="mem.png" alt="Pre-Wedding Memory" class="memory-img floating">
         </div>
         
@@ -509,7 +491,9 @@ section:nth-of-type(5) .img-box img {
       <div class="content-wrap">
         <h2 class="eng-sharp names-title anim-element d-1" style="color: var(--gold);">Wedding Venue</h2>
         <div class="img-box anim-element d-2">
-          <img src="tutari.png" alt="Venue" class="venue-img sway-image">
+          <div class="sway-image" style="height: 100%; display: flex; align-items: center; justify-content: center;">
+            <img src="tutari.png" alt="Venue">
+          </div>
         </div>
         <div class="info-block anim-element d-3">
           <h3 class="marathi-sharp big-marathi" style="color: var(--light-gold);">साई समता मंगल कार्यालय</h3>
@@ -529,25 +513,24 @@ section:nth-of-type(5) .img-box img {
       <img src="banana.png" class="banana-side left-side" alt="">
       <img src="banana.png" class="banana-side right-side" alt="">
       <div class="content-wrap" style="justify-content: center;">
-        <h2 class="eng-sharp anim-element d-1" style="font-size: clamp(1.1rem, 3.5vw, 1.4rem); margin-bottom: 20px;">With Best Compliments From</h2>
+        <h2 class="eng-sharp anim-element d-1" style="font-size: clamp(1rem, 3.5vw, 1.4rem); margin-bottom: 15px;">With Best Compliments From</h2>
         <div class="info-block anim-element d-2" style="background: rgba(255, 153, 51, 0.12);">
           <p class="marathi-sharp big-marathi" style="color: var(--bright-red);">निमंत्रक</p>
-          <p class="marathi-sharp med-marathi" style="color: var(--deep-maroon); margin: 10px 0;">
+          <p class="marathi-sharp med-marathi" style="color: var(--deep-maroon); margin: 8px 0;">
             समस्त कोंडे पा. परिवार व आप्तेष्ट<br>समस्त ग्रामस्थ धामणखेल
           </p>
           <p class="eng-sharp eng-sub" style="color: var(--bright-red);">Inviters</p>
           <p class="desc-text" style="color: var(--deep-maroon); margin-top: 5px;">Konde Patil Family & Residents of Dhamankhel</p>
         </div>
-        <div class="anim-element d-3" style="margin-top: 50px;">
-          <div class="marathi-sharp" style="font-size: clamp(1.6rem, 5.5vw, 2.2rem); color: var(--saffron);">॥ सदा सर्वदा योग तुझा घडावा ॥</div>
-          <div class="eng-sharp" style="font-size: clamp(0.8rem, 3vw, 1rem); color: var(--saffron); margin-top: 8px;">May we always stay connected</div>
+        <div class="anim-element d-3" style="margin-top: 30px;">
+          <div class="marathi-sharp" style="font-size: clamp(1.4rem, 5vw, 2.2rem); color: var(--saffron);">॥ सदा सर्वदा योग तुझा घडावा ॥</div>
+          <div class="eng-sharp" style="font-size: clamp(0.75rem, 2.8vw, 1rem); color: var(--saffron); margin-top: 5px;">May we always stay connected</div>
         </div>
       </div>
     </section>
   </div>
 
   <script>
-    // --- Three.js Implementation ---
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.8, 2000);
     const renderer = new THREE.WebGLRenderer({
@@ -560,7 +543,6 @@ section:nth-of-type(5) .img-box img {
     camera.position.set(0, 20, 500);
     camera.lookAt(0, 0, 0);
 
-    // --- Spiral magical rings ---
     const ringGroup = new THREE.Group();
     const rings = [];
 
@@ -597,9 +579,8 @@ section:nth-of-type(5) .img-box img {
     }
     scene.add(ringGroup);
 
-    // --- Continuous Flower Shower (Top to Bottom) ---
     const flowerGeo = new THREE.BufferGeometry();
-    const flowerCount = 900; // Increased density for better full-screen effect
+    const flowerCount = 900; 
     const flowerPositions = new Float32Array(flowerCount * 3);
     const flowerColors = new Float32Array(flowerCount * 3);
     const flowerSpeeds = new Float32Array(flowerCount); 
@@ -611,13 +592,12 @@ section:nth-of-type(5) .img-box img {
       new THREE.Color('#FFE4B5'), new THREE.Color('#FF6347')
     ];
 
-    // Distribute flowers continuously across the entire vertical space
     for (let i = 0; i < flowerCount; i++) {
-      flowerPositions[i * 3] = (Math.random() - 0.5) * 800; // Wider X spread
-      flowerPositions[i * 3 + 1] = (Math.random() - 0.5) * 1000 + 200; // Y Spread covering top to bottom
-      flowerPositions[i * 3 + 2] = (Math.random() - 0.5) * 600; // Z depth
+      flowerPositions[i * 3] = (Math.random() - 0.5) * 800; 
+      flowerPositions[i * 3 + 1] = (Math.random() - 0.5) * 1000 + 200; 
+      flowerPositions[i * 3 + 2] = (Math.random() - 0.5) * 600; 
 
-      flowerSpeeds[i] = 1.0 + Math.random() * 2.0; // Individual fall speeds
+      flowerSpeeds[i] = 1.0 + Math.random() * 2.0; 
 
       const col = palette[Math.floor(Math.random() * palette.length)];
       flowerColors[i * 3] = col.r;
@@ -628,7 +608,7 @@ section:nth-of-type(5) .img-box img {
     flowerGeo.setAttribute('color', new THREE.BufferAttribute(flowerColors, 3));
 
     const flowerMat = new THREE.PointsMaterial({
-      size: 5.5, // Slightly larger petals
+      size: 5.5, 
       vertexColors: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
@@ -655,7 +635,6 @@ section:nth-of-type(5) .img-box img {
     const flowers = new THREE.Points(flowerGeo, flowerMat);
     scene.add(flowers);
 
-    // Additional tiny ambient sparkles
     const sparkleGeo = new THREE.BufferGeometry();
     const sparkleCount = 500;
     const sparklePos = new Float32Array(sparkleCount * 3);
@@ -676,7 +655,6 @@ section:nth-of-type(5) .img-box img {
     const sparkles = new THREE.Points(sparkleGeo, sparkleMat);
     scene.add(sparkles);
 
-    // Lights
     scene.add(new THREE.AmbientLight(0x4a2020));
     const light1 = new THREE.PointLight(0xFFAA00, 1.2, 800);
     light1.position.set(70, 150, 250);
@@ -685,11 +663,9 @@ section:nth-of-type(5) .img-box img {
     light2.position.set(-80, -50, 200);
     scene.add(light2);
 
-    // Animation Loop
     function animate() {
       requestAnimationFrame(animate);
 
-      // Rings
       rings.forEach((ring, idx) => {
         ring.rotation.y += ring.userData.rotSpeedY;
         ring.rotation.x += ring.userData.rotSpeedX;
@@ -697,15 +673,12 @@ section:nth-of-type(5) .img-box img {
         ring.scale.set(s, s, s);
       });
 
-      // Continuous Endless Flower Shower
       const pos = flowers.geometry.attributes.position.array;
       for (let i = 0; i < flowerCount; i++) {
-        pos[i * 3 + 1] -= flowerSpeeds[i]; // Fall down continuously
-        pos[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.5; // Natural drift side-to-side
+        pos[i * 3 + 1] -= flowerSpeeds[i]; 
+        pos[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.5; 
         
-        // If it falls completely past the bottom edge of the screen
         if (pos[i * 3 + 1] < -450) { 
-          // Respawn far above the top edge
           pos[i * 3 + 1] = 500 + Math.random() * 150; 
           pos[i * 3] = (Math.random() - 0.5) * 800; 
           pos[i * 3 + 2] = (Math.random() - 0.5) * 600;
@@ -713,7 +686,6 @@ section:nth-of-type(5) .img-box img {
       }
       flowers.geometry.attributes.position.needsUpdate = true;
 
-      // Sparkles
       sparkles.rotation.y += 0.0005;
       sparkles.rotation.x += 0.0003;
 
@@ -721,20 +693,18 @@ section:nth-of-type(5) .img-box img {
     }
     animate();
 
-    // Window Resize Handling
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Intersection Observer for CSS Animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('in-view');
         else entry.target.classList.remove('in-view');
       });
-    }, { threshold: 0.3 }); // Lowered threshold slightly to trigger earlier
+    }, { threshold: 0.3 }); 
     
     document.querySelectorAll('.card').forEach(card => observer.observe(card));
   </script>
