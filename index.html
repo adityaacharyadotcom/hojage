@@ -63,6 +63,7 @@
       -webkit-overflow-scrolling: touch;
       position: relative;
       z-index: 10;
+      perspective: 1000px; /* Added for 3D depth on swipe */
     }
 
     .invitation-stack::-webkit-scrollbar {
@@ -83,6 +84,19 @@
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       box-shadow: inset 0 0 40px rgba(212, 175, 55, 0.15), 0 0 20px rgba(0, 0, 0, 0.4);
+      transform-origin: center center;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Subtle cinematic zoom-in when card is active */
+    .card:not(.in-view) .content-wrap {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    .card.in-view .content-wrap {
+        transform: scale(1);
+        opacity: 1;
+        transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .card-maroon {
@@ -119,13 +133,13 @@
     }
 
     @keyframes swayLeft {
-      0%, 100% { transform: scaleX(-1) rotate(0deg); }
-      50% { transform: scaleX(-1) rotate(6deg); }
+      0%, 100% { transform: scaleX(-1) rotate(0deg) scale(1); }
+      50% { transform: scaleX(-1) rotate(4deg) scale(1.02); }
     }
 
     @keyframes swayRight {
-      0%, 100% { transform: rotate(0deg); }
-      50% { transform: rotate(-6deg); }
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(-4deg) scale(1.02); }
     }
 
     .banana-side {
@@ -136,19 +150,19 @@
       opacity: 0.85;
       pointer-events: none;
       object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
     }
 
     .left-side {
       left: -15px;
       transform-origin: top right;
-      animation: swayLeft 6s ease-in-out infinite;
+      animation: swayLeft 8s ease-in-out infinite;
     }
 
     .right-side {
       right: -15px;
       transform-origin: top left;
-      animation: swayRight 6s ease-in-out infinite;
+      animation: swayRight 8s ease-in-out infinite;
     }
 
     .content-wrap {
@@ -179,17 +193,17 @@
       width: auto;
       height: auto;
       object-fit: contain;
-      filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.7));
+      filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.8));
     }
 
     @keyframes gentleSway {
-      0%, 100% { transform: translateX(0px); }
-      25% { transform: translateX(12px); }
-      75% { transform: translateX(-12px); }
+      0%, 100% { transform: translateX(0px) translateY(0px); }
+      25% { transform: translateX(8px) translateY(-4px); }
+      75% { transform: translateX(-8px) translateY(4px); }
     }
 
     .sway-image {
-      animation: gentleSway 6s ease-in-out infinite;
+      animation: gentleSway 8s ease-in-out infinite;
       display: inline-block;
     }
 
@@ -231,6 +245,7 @@
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
       margin: 10px auto;
+      box-shadow: 0 0 10px var(--gold); /* Cinematic glow */
     }
 
     .info-block {
@@ -240,11 +255,17 @@
       width: 100%;
       border: 1px solid rgba(255, 215, 0, 0.6);
       margin: 5px 0;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
-      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35); /* Deepened shadow */
+      backdrop-filter: blur(8px);
       position: relative;
       z-index: 5;
       flex: 0 1 auto;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .info-block:hover {
+        transform: translateY(-2px) scale(1.01);
+        box-shadow: 0 15px 35px rgba(255, 215, 0, 0.15);
     }
 
     .card-cream .info-block {
@@ -268,36 +289,39 @@
         line-height: 1.4;
     }
 
+    /* CINEMATIC REVEAL ANIMATIONS */
     .anim-element {
       opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transform: translateY(40px) scale(0.95);
+      filter: blur(8px);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .in-view .anim-element {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
+      filter: blur(0);
     }
 
-    .d-1 { transition-delay: 0.15s; }
-    .d-2 { transition-delay: 0.35s; }
-    .d-3 { transition-delay: 0.55s; }
+    .d-1 { transition-delay: 0.1s; }
+    .d-2 { transition-delay: 0.3s; }
+    .d-3 { transition-delay: 0.5s; }
 
     @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-12px); }
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(1deg); }
     }
 
-    .floating { animation: float 4.5s ease-in-out infinite; }
+    .floating { animation: float 6s ease-in-out infinite; }
 
     @keyframes pulse {
-      0%, 100% { opacity: 0.4; }
-      50% { opacity: 1; }
+      0%, 100% { opacity: 0.3; transform: scale(0.98); }
+      50% { opacity: 1; transform: scale(1.02); text-shadow: 0 0 15px var(--gold); }
     }
 
     .swipe-hint {
       font-size: clamp(0.8rem, 2.5vw, 1rem);
-      animation: pulse 2s infinite;
+      animation: pulse 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
       margin-top: 8px;
       color: var(--gold);
     }
@@ -320,13 +344,13 @@
       max-height: 45%;
       height: auto;
       object-fit: contain;
-      filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+      filter: drop-shadow(0 10px 25px rgba(0,0,0,0.4));
     }
 
     .memory-img {
       border-radius: 12px;
       border: 3px solid var(--gold);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
     }
 
     .corner-accent {
@@ -334,9 +358,10 @@
       width: 50px;
       height: 50px;
       border: 3px solid var(--gold);
-      opacity: 0.6;
+      opacity: 0.8;
       pointer-events: none;
       z-index: 3;
+      box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.2);
     }
 
     .accent-tl {
@@ -394,7 +419,7 @@
                 <span style="font-size: clamp(1.2rem, 4vw, 1.9rem); color: var(--saffron); font-family: 'Tangerine', cursive;">आणि</span> <br>
                 चि. सोमेश्वर
             </h1>
-            <div class="divider-gold" style="height: 2px; width: 80%; margin: 8px auto; background: linear-gradient(90deg, transparent, var(--bright-red), transparent);"></div>
+            <div class="divider-gold" style="height: 2px; width: 80%; margin: 8px auto; background: linear-gradient(90deg, transparent, var(--bright-red), transparent); box-shadow: 0 0 8px rgba(198, 40, 40, 0.4);"></div>
             <p class="eng-sharp eng-sub" style="color: var(--deep-maroon); font-weight: bold; letter-spacing: 1px;">Prerana & Someshwar</p>
             <p class="trans-equal" style="color: var(--bright-red); font-style: italic;">(प्रेरणा आणि सोमेश्वर)</p>
         </div>
@@ -536,11 +561,14 @@
     const renderer = new THREE.WebGLRenderer({
       canvas: document.getElementById('bg-canvas'),
       alpha: true,
-      antialias: true
+      antialias: true,
+      powerPreference: "high-performance" // Ensure smooth 3D processing
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    camera.position.set(0, 20, 500);
+    
+    // Set initial camera further back for cinematic establishing feel
+    camera.position.set(0, 20, 550);
     camera.lookAt(0, 0, 0);
 
     const ringGroup = new THREE.Group();
@@ -551,11 +579,11 @@
       const material = new THREE.MeshStandardMaterial({
         color: color,
         emissive: color,
-        emissiveIntensity: 0.7,
+        emissiveIntensity: 0.8, // Slightly higher for bloom-like feel
         transparent: true,
         opacity: opacity,
-        roughness: 0.22,
-        metalness: 0.2,
+        roughness: 0.15, // Smoother reflections
+        metalness: 0.4,  // More metallic look
       });
       const ring = new THREE.Mesh(geometry, material);
       ring.userData = {
@@ -636,7 +664,7 @@
     scene.add(flowers);
 
     const sparkleGeo = new THREE.BufferGeometry();
-    const sparkleCount = 500;
+    const sparkleCount = 600; // Increased density slightly
     const sparklePos = new Float32Array(sparkleCount * 3);
     for (let i = 0; i < sparkleCount * 3; i += 3) {
       sparklePos[i] = (Math.random() - 0.5) * 800;
@@ -646,37 +674,60 @@
     sparkleGeo.setAttribute('position', new THREE.BufferAttribute(sparklePos, 3));
     const sparkleMat = new THREE.PointsMaterial({
       color: 0xFFD700,
-      size: 2.2,
+      size: 2.5,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
       transparent: true,
-      opacity: 0.7,
+      opacity: 0.8,
     });
     const sparkles = new THREE.Points(sparkleGeo, sparkleMat);
     scene.add(sparkles);
 
     scene.add(new THREE.AmbientLight(0x4a2020));
-    const light1 = new THREE.PointLight(0xFFAA00, 1.2, 800);
-    light1.position.set(70, 150, 250);
+    
+    // Dynamic cinematic lighting
+    const light1 = new THREE.PointLight(0xFFAA00, 1.4, 800);
     scene.add(light1);
-    const light2 = new THREE.PointLight(0xFF5500, 0.8, 600);
-    light2.position.set(-80, -50, 200);
+    const light2 = new THREE.PointLight(0xFF5500, 1.0, 600);
     scene.add(light2);
+
+    let clock = new THREE.Clock();
 
     function animate() {
       requestAnimationFrame(animate);
+      
+      const elapsedTime = clock.getElapsedTime();
+
+      // CINEMATIC UPGRADE: Smooth slow camera panning like a drone
+      camera.position.x = Math.sin(elapsedTime * 0.1) * 30;
+      camera.position.y = 20 + Math.cos(elapsedTime * 0.15) * 15;
+      camera.lookAt(0, 0, 0);
+
+      // CINEMATIC UPGRADE: Orbiting dynamic lights for realistic metal shading on rings
+      light1.position.set(
+        Math.cos(elapsedTime * 0.5) * 200, 
+        150, 
+        Math.sin(elapsedTime * 0.5) * 250
+      );
+      light2.position.set(
+        Math.sin(elapsedTime * 0.3) * -150, 
+        -50 + Math.cos(elapsedTime * 0.4) * 50, 
+        Math.cos(elapsedTime * 0.3) * 200
+      );
 
       rings.forEach((ring, idx) => {
         ring.rotation.y += ring.userData.rotSpeedY;
         ring.rotation.x += ring.userData.rotSpeedX;
-        const s = 1 + Math.sin(Date.now() * 0.003 + idx) * 0.03;
+        // Smoother scaling pulse
+        const s = 1 + Math.sin(elapsedTime * 0.5 + idx) * 0.02;
         ring.scale.set(s, s, s);
       });
 
       const pos = flowers.geometry.attributes.position.array;
       for (let i = 0; i < flowerCount; i++) {
         pos[i * 3 + 1] -= flowerSpeeds[i]; 
-        pos[i * 3] += Math.sin(Date.now() * 0.001 + i) * 0.5; 
+        // More organic sideways swishing based on time
+        pos[i * 3] += Math.sin(elapsedTime + i) * 0.6; 
         
         if (pos[i * 3 + 1] < -450) { 
           pos[i * 3 + 1] = 500 + Math.random() * 150; 
@@ -686,8 +737,11 @@
       }
       flowers.geometry.attributes.position.needsUpdate = true;
 
-      sparkles.rotation.y += 0.0005;
-      sparkles.rotation.x += 0.0003;
+      sparkles.rotation.y += 0.0008;
+      sparkles.rotation.x += 0.0004;
+      
+      // Pulse sparkles occasionally
+      sparkleMat.opacity = 0.6 + Math.sin(elapsedTime * 2) * 0.2;
 
       renderer.render(scene, camera);
     }
@@ -699,12 +753,19 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
+    // Intersection Observer for triggering cinematic class
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add('in-view');
-        else entry.target.classList.remove('in-view');
+        if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+        } else {
+            // Remove slightly after swipe to re-trigger animation on scroll back
+            setTimeout(() => {
+                if(!entry.isIntersecting) entry.target.classList.remove('in-view');
+            }, 300);
+        }
       });
-    }, { threshold: 0.3 }); 
+    }, { threshold: 0.4 }); // Triggers a bit later for better visual sync
     
     document.querySelectorAll('.card').forEach(card => observer.observe(card));
   </script>
@@ -714,16 +775,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 
 <style>
+    /* CINEMATIC UPGRADE: Added horizontal translate for sweeping wind effect */
     @keyframes flowerFall {
-        0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+        0% { transform: translate(0, -50px) rotate(0deg); opacity: 0; }
         10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        70% { transform: translate(30px, 70vh) rotate(200deg); opacity: 1; }
+        100% { transform: translate(-20px, 110vh) rotate(360deg); opacity: 0; }
     }
     .falling-flower {
         position: absolute;
         top: -50px;
         animation: flowerFall linear infinite;
+        filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); /* Added depth */
     }
 </style>
 
@@ -739,7 +802,10 @@
             f.style.left = Math.random() * 100 + '%';
             f.style.color = colors[Math.floor(Math.random() * colors.length)];
             f.style.fontSize = (Math.random() * 15 + 10) + 'px';
-            f.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            
+            // Added cubic bezier timing for more organic wind feel
+            f.style.animationTimingFunction = 'cubic-bezier(0.37, 0, 0.63, 1)';
+            f.style.animationDuration = (Math.random() * 4 + 4) + 's';
             f.style.animationDelay = Math.random() * 5 + 's';
             container.appendChild(f);
         }
